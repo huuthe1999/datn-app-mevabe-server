@@ -1,0 +1,274 @@
+paths:
+  /users:
+    get:
+      tags:
+        - User
+      summary: Get List User
+      description: Lấy thông tin dữ liệu User
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - User
+      summary: Create User
+      description: Tạo mới User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - User
+      summary: Delete Many User
+      description: Xóa nhiều User
+      parameters:
+        - name: ids
+          in: query
+          description: List Ids
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - bearerAuth: []
+  /users/{id}:
+    get:
+      tags:
+        - User
+      summary: Get One User
+      description: Lấy thông tin một dữ liệu dữ liệu User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - User
+      summary: Update User
+      description: Chỉnh sửa User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - User
+      summary: Delete One User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+      security:
+        - bearerAuth: []
+  /users/me:
+    get:
+      tags:
+        - User
+      summary: Get User Profile
+      description: Lấy thông tin mô tả User sau đăng nhập
+      parameters:
+        - name: accessToken
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+      security:
+        - bearerAuth: []
+  /users/avatar:
+    post:
+      tags:
+        - User
+      summary: Post User Avatar
+      consumes:
+         - multipart/form-data
+      description: Đăng ảnh đại diện
+      parameters:
+        - in: formData
+          name: image
+          required: true
+          type: file
+          description: Ở BE sẽ query image từ request gửi lên {image:req.file.path}
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatar: 
+                    type: string
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - User
+      summary: Put User Avatar
+      consumes:
+         - multipart/form-data
+      description: Cập nhật ảnh đại diện mới
+      parameters:
+        - in: formData
+          name: image
+          required: true
+          type: file
+          description: Ở BE sẽ query image từ request gửi lên {image:req.file.path}
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatar: 
+                    type: string
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: uuid
+        avatar:
+          type: string
+          default: >-
+            https://res.cloudinary.com/dknvhah81/image/upload/v1614582614/default/default-image_c2znfe.png
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minimum: 8
+        phone:
+          type: string
+        accountType:
+          type: string
+          default: "normal"
+        createAt:
+          type: string
+          format: date-time
+        updateAt:
+          type: string
+          format: date-time
+        childs:
+          type: array
+          items:
+              $ref: '#/components/schemas/Child'
+      required:
+        - name
+        - email
+        - password
+    Child:
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: uuid
+        name:
+          type: string
+        birthday:
+          type: string
+          format: date-time
+        gender:
+          type: boolean
+        user:
+          $ref: "#/components/schemas/UserResponse"
+        createAt:
+          type: string
+          format: date-time
+        updateAt:
+          type: string
+          format: date-time   
+    UserResponse:
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: uuid
+        name:
+          type: string
+        avatar:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        accountType:
+          type: string
+        createAt:
+          type: string
+          format: date-time
+        updateAt:
+          type: string
+          format: date-time
+        childs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Child'

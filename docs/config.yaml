@@ -1,0 +1,37 @@
+tags:
+  - name: MevaBe
+    description: MevaBe API
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: Mã lỗi http
+        code:
+          type: string
+          description: Mã lỗi
+        message:
+          type: string
+          description: Thông báo lỗi
+        data:
+          type: any
+        pagination:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+            nextPage:
+              type: integer
+            prevPage:
+              type: integer
+            limit:
+              type: integer
+            totalItems:
+              type: integer

@@ -1,0 +1,137 @@
+paths:
+  /auths/signup:
+    post:
+      tags:
+        - Auth
+      summary: Signup
+      description: Tạo mới User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Signup"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignupResponse"
+      security:
+        - bearerAuth: []
+  /auths/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Đăng nhập
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+      security:
+        - bearerAuth: []
+  /auths/forgot-password:
+    post:
+      tags:
+        - Auth
+      summary: Forgot Password
+      description: Quên mật khẩu User
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: email
+          description: Email nhận link reset mật khẩu
+          required: true
+          type: string
+          format: email
+      responses:
+        200:
+          description: Link Reset Password đã được gửi tới ${email}
+        400:
+          description: Tài khoản email không tồn tại
+      security:
+        - bearerAuth: []
+  /auths/reset-password:
+    post:
+      tags:
+        - Auth
+      summary: Reset Password
+      description: Đặt lại mật khẩu User
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Chứa mật khẩu mới cần reset + token
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResetPasswordObject'
+      responses:
+        200:
+          description: Thay đổi mật khẩu thành công !
+        400:
+          description: Không thể thay đổi mật khẩu ! Thử lại
+      security:
+        - bearerAuth: []
+components:
+  schemas:
+    Signup:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+    SignupResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+    ResetPasswordObject:
+      type: object
+      properties:
+        newPassword:
+          type: string
+          minimum: 8
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVzZXJJZCI6IjYwMzc3NjFiMmJlNzEzMjY4ODYyNTBmZiJ9LCJpYXQiOjE2MTQ1NzQ2MDIsImV4cCI6MTYxNDU3ODIwMn0.P9KHe2ac7Nezwreig3d6BzhXooFKT1CltW9Am7vyDvM
+        

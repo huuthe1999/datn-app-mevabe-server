@@ -1,0 +1,39 @@
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - init
+  - deploy_qa
+  - test_qa
+  - deploy_prod
+
+init:
+  stage: init
+  image: node:12.18.1
+  script:
+    - npm install
+
+deploy_qa:
+  image: node:12.18.1
+  stage: deploy_qa
+  script:
+    - git push https://$HEROKU_USER:$HEROKU_API_KEY@git.heroku.com/datn-me-va-be-server.git HEAD:master
+    - echo "Deployed to qa server"
+  environment:
+    name: qa
+    url: https://datn-me-va-be-server.herokuapp.com/
+  only:
+    - master
+
+deploy_production:
+  image: node:12.18.1
+  stage: deploy_prod
+  script:
+    - git push https://$HEROKU_USER:$HEROKU_API_KEY@git.heroku.com/datn-me-va-be-server-prod.git HEAD:master
+    - echo "Deployed to production server"
+  environment:
+    name: production
+    url: https://datn-me-va-be-server-prod.herokuapp.com/
+  only:
+    - master
