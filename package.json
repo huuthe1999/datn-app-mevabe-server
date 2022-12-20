@@ -27,7 +27,7 @@
     "cloudinary": "^1.25.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-jwt": "^6.0.0",
     "express-validator": "^6.9.2",
     "googleapis": "^67.1.1",
